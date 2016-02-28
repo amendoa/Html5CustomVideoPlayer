@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Custom Html5 Player</title>
+ 	<link rel="stylesheet" href="./assets/stylesheet/main.css"> 
+</head>
+<body>
+	<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="0" height="0">
+    	<symbol viewBox="0 0 24 24" id="play">
+    		<g>
+              	<path d="M8,5.14V19.14L19,12.14L8,5.14Z"></path>
+            </g>
+        </symbol>
+        <symbol viewBox="0 0 24 24" id="volume-high">
+    		<g>
+              	<path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" ></path>
+            </g>
+        </symbol>
+        <symbol viewBox="0 0 24 24" id="volume-muted">
+    		<g>
+              	<path d="M12,4L9.91,6.09L12,8.18M4.27,3L3,4.27L7.73,9H3V15H7L12,20V13.27L16.25,17.53C15.58,18.04 14.83,18.46 14,18.7V20.77C15.38,20.45 16.63,19.82 17.68,18.96L19.73,21L21,19.73L12,10.73M19,12C19,12.94 18.8,13.82 18.46,14.64L19.97,16.15C20.62,14.91 21,13.5 21,12C21,7.72 18,4.14 14,3.23V5.29C16.89,6.15 19,8.83 19,12M16.5,12C16.5,10.23 15.5,8.71 14,7.97V10.18L16.45,12.63C16.5,12.43 16.5,12.21 16.5,12Z" ></path>
+            </g>
+        </symbol> 
+        <symbol viewBox="0 0 24 24" id="expand">
+    		<g>
+              	<path d="M5,5H10V7H7V10H5V5M14,5H19V10H17V7H14V5M17,14H19V19H14V17H17V14M10,17V19H5V14H7V17H10Z" ></path>
+            </g>
+        </symbol>  
+        <symbol viewBox="0 0 24 24" id="retract">
+    		<g>
+              	<path d="M14,14H19V16H16V19H14V14M5,14H10V19H8V16H5V14M8,5H10V10H5V8H8V5M19,8V10H14V5H16V8H19Z" ></path>
+            </g>
+        </symbol>
+        <symbol viewBox="0 0 966 966" id="hd">
+    		<g>
+              	<path d="m 150.01283,235.40846 0,495.18308 665.97434,0 0,-495.18309 -665.97434,0 z m 63.08814,88.067 78.81005,0 0,119.13452 88.89272,0 0,-119.13452 78.81005,0 0,319.98946 -78.81005,0 0,-127.01175 -88.89272,0 0,127.01175 -78.81005,0 0,-319.98946 z m 312.49192,0 87.97575,0 c 90.72419,0 153.03923,45.29008 153.03923,158.51765 0,113.22757 -62.31607,161.47181 -148.45839,161.47181 l -92.55659,0 0,-319.98946 z m 78.81004,67.93635 0,184.11675 4.58216,0 c 43.0712,0 76.97879,-18.70742 76.97879,-93.53546 0,-74.82803 -33.90759,-90.5813 -76.97879,-90.5813 l -4.58216,0 z" ></path>
+            </g>
+        </symbol>     
+        <symbol viewBox="0 0 24 24" id="reload">
+    		<g>
+              	<path d="M19,12H22.32L17.37,16.95L12.42,12H16.97C17,10.46 16.42,8.93 15.24,7.75C12.9,5.41 9.1,5.41 6.76,7.75C4.42,10.09 4.42,13.9 6.76,16.24C8.6,18.08 11.36,18.47 13.58,17.41L15.05,18.88C12,20.69 8,20.29 5.34,17.65C2.22,14.53 2.23,9.47 5.35,6.35C8.5,3.22 13.53,3.21 16.66,6.34C18.22,7.9 19,9.95 19,12Z" ></path>
+            </g>
+        </symbol>
+        <symbol viewBox="0 0 24 24" id="pause">
+    		<g>
+              	<path d="M14,19.14H18V5.14H14M6,19.14H10V5.14H6V19.14Z" ></path>
+            </g>
+        </symbol>    
+
+    </svg>
+
+	<div class="post">
+		<div class="video-player player-content">
+			<video  class="video" width="100%" height="100%">
+				<source src="https://www.paypalobjects.com/webstatic/mktg/videos/PayPal_AustinSMB_baseline.mp4"></source>
+			</video>
+		</div>
+	</div> 	
+	<script src="./assets/javascript/main.js"></script>	
+</body>
+</html>

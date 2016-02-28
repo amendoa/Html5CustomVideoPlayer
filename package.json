@@ -1,0 +1,13 @@
+{
+  "name": "html5customvideoplayer",
+  "version": "0.0.1",
+  "description": "Html 5 custom video player",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-cssmin": "^0.1.7",
+    "gulp-uglify": "^1.5.3"
+  },
+  "author": "Matheus Almeida",
+  "license": "MIT"
+}
