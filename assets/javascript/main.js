@@ -58,10 +58,10 @@
 	playerVideo.prototype.buildControlsButtons = function () {	
 
 		this.playIconSpan = document.createElement('span');
-		this.playIconSpan.className = 'icon icon-play';
+		this.playIconSpan.className = 'icon icon-button icon-play';
 
 		this.reloadIconSpan = document.createElement('span');
-		this.reloadIconSpan.className = 'icon icon-restart';
+		this.reloadIconSpan.className = 'icon icon-button icon-restart';
 
 		this.componentsContentLeft.appendChild(this.playIconSpan);	
 		this.componentsContentLeft.appendChild(this.reloadIconSpan);	
@@ -122,7 +122,7 @@
 		this.volumeBarBall.className = 'volumebar-ball';
 
 		this.iconVolumeSpan = document.createElement('span');
-		this.iconVolumeSpan.className = 'icon icon-volume-high volume-button';
+		this.iconVolumeSpan.className = 'icon icon-button icon-volume-high volume-button';
 
 		///Volume bar
 		this.volumeBarLevel.appendChild(this.volumeBarBall);
@@ -140,10 +140,10 @@
 	playerVideo.prototype.buildFunctionButtons = function () {
 
 		this.expandIconSpan = document.createElement('span');
-		this.expandIconSpan.className = 'icon icon-expand';
+		this.expandIconSpan.className = 'icon icon-button icon-expand';
 
 		this.hdIconSpan = document.createElement('span');
-		this.hdIconSpan.className = 'icon icon-hd';
+		this.hdIconSpan.className = 'icon icon-button icon-hd';
 		
 		this.componentsContentRight.appendChild(this.hdIconSpan);
 		this.componentsContentRight.appendChild(this.expandIconSpan);
@@ -160,7 +160,7 @@
 
 		function mouseMoveProgress (e) {
 			self.player.pause();
-			self.playIconSpan.className = 'icon icon-play';
+			self.playIconSpan.className = 'icon icon-button icon-play';
 		
 			var totalPercent = Math.round(((e.pageX - findPosX(self.progressBarFull)) / self.progressBarFull.offsetWidth) * 100 );
 			console.log(totalPercent)
@@ -182,7 +182,7 @@
 			}
 			self.player.currentTime =  (totalPercent / 100) * self.player.duration;
 			self.player.play();
-			self.playIconSpan.className = 'icon icon-pause';
+			self.playIconSpan.className = 'icon icon-button icon-pause';
 		};
 
 		function mouseUpVolume (element) {
@@ -192,10 +192,10 @@
 
 		function playPauseClick (){
 			if (self.player.paused) {			
-				this.className = 'icon icon-pause';
+				self.playIconSpan.className = 'icon icon-button icon-pause';
 				self.player.play();
 			} else {
-				this.className = 'icon icon-play';
+				self.playIconSpan.className = 'icon icon-button icon-play';
 				self.player.pause();
 			}
 		}
@@ -226,13 +226,13 @@
 				self.player.volume = volume;
 				
 				if (volume <= 0){					
-					self.iconVolumeSpan.className = "icon icon-volume-muted";
+					self.iconVolumeSpan.className = "icon icon-button icon-volume-muted";
 					self.player.muted = true;
 				} else if (percentage <= 50) {
-					self.iconVolumeSpan.className = "icon icon-volume-low";
+					self.iconVolumeSpan.className = "icon icon-button icon-volume-low";
 					self.player.muted = false;
 				} else {
-					self.iconVolumeSpan.className = "icon icon-volume-high";
+					self.iconVolumeSpan.className = "icon icon-button icon-volume-high";
 					self.player.muted = false;
 				}
 			}		
@@ -267,7 +267,7 @@
 			}	
 
 			if (self.player.ended) {
-				self.playIconSpan.className = 'icon icon-play';
+				self.playIconSpan.className = 'icon icon-button icon-play';
 			}
 		}
 		
@@ -278,10 +278,10 @@
 		function expandMinimizeClick () {		
 			if (!document.webkitIsFullScreen) {
 				self.player.webkitRequestFullScreen();
-				this.className = "icon icon-minimize"
+				this.className = "icon icon-button icon-minimize"
 			} else {
 				document.webkitCancelFullScreen();
-				this.className = "icon icon-expand"
+				this.className = "icon icon-button icon-expand"
 			}
 		}
 
@@ -297,10 +297,10 @@
 			console.log(self.player.muted)
 			if (self.player.muted) {
 				self.player.muted = false;
-				self.iconVolumeSpan.className = "icon icon-volume-high";
+				self.iconVolumeSpan.className = "icon icon-button icon-volume-high";
 			} else {
 				self.player.muted = true;
-				self.iconVolumeSpan.className = "icon icon-volume-muted";
+				self.iconVolumeSpan.className = "icon icon-button icon-volume-muted";
 			}			
 		}
 
@@ -318,6 +318,10 @@
 			self.progressBarFull.addEventListener('mouseup', mouseUpProgress);
 		}
 
+		function playerClick () {
+			console.log('clicked')
+		}
+
 		this.playIconSpan.addEventListener('click', playPauseClick);
 		this.reloadIconSpan.addEventListener('click', reloadClick);
 		this.player.addEventListener('timeupdate', videoUpdateTime);
@@ -326,7 +330,8 @@
 		this.progressBarFull.addEventListener('mousedown', progressBarClick);
 		this.iconVolumeSpan.addEventListener('click', muteUnmuteClick);	
 		this.volumeFullBar.addEventListener('mousedown', volumeBarClick);
-		this.progressBarBall.addEventListener('mousedown', progressBarBallClick); 	
+		this.progressBarBall.addEventListener('mousedown', progressBarBallClick);
+		this.player.addEventListener('click', playPauseClick);
 
 		return this;
 	};

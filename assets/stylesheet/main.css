@@ -1,16 +1,17 @@
 .controls-content {
-    bottom: 16px;
-    height: auto;
+    bottom: 0px;
+    height: 40px;
     left: 0;
-    padding: 0 16px;
+    padding: 0 30px;
     position: absolute;
     right: 0;
     top: auto;
     width: auto;
     background-color: transparent;
     z-index: 2147483647;
-    -webkit-transition: opacity 2.5s linear;
-    transition:opacity 2.5s linear;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.3s, opacity 0.3s linear;
 }
 
 .components-content {
@@ -92,6 +93,8 @@
 
 .volume-button:hover > div {
     visibility: visible;
+    opacity: 1;
+    transition: visibility 0.3s, opacity 0.3s linear;
 }
 
 .volumebar-content {
@@ -101,6 +104,8 @@
     position: absolute;
     width: 100%;
     visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.3s, opacity 0.3s linear;
 }
 
 .volumebar-full {
@@ -108,7 +113,7 @@
     border-radius: 4px;
     box-shadow: 0 1px 4px rgba(20, 22, 26, .3);
     height: 60px;
-    margin: 6px 12px 0;
+    margin: 6px 9px 0;
     position: absolute;
     width: 8px;
 
@@ -151,48 +156,6 @@
             transform: scale(1.5); 
 }
 
-.icon {
-    cursor: pointer;
-    display: inline-block;
-    margin: 5px;
-    position: relative;
-    vertical-align: middle;
-}
-
-.icon svg {
-    fill:#f1f1f1;
-}
-
-.icon-play svg {
-    width: 30px;
-    height: 30px;
-}
-
-.icon-pause svg {
-    width: 30px;
-    height: 30px;
-}
-
-.icon-volume-high svg {
-    width: 22px;
-    height: 22px;
-}
-
-.icon-expand svg {
-    width: 25px;
-    height: 25px;
-}
-
-.icon-hd svg {
-    width: 22px;
-    height: 22px;
-}
-
-.icon-reload svg {
-    width: 22px;
-    height: 22px;
-}
-
 video::-webkit-media-controls {
     display:none !important;
 }
@@ -206,6 +169,8 @@ video::-webkit-media-controls {
 
 .player-content:hover > div {
     visibility: visible;
+    opacity: 1;
+    transition: visibility 0.3s, opacity 0.3s linear;
 }
 
 .timer {
@@ -220,8 +185,7 @@ video::-webkit-media-controls {
 }
 
 .post {
-    width: 100%;
-    max-width: 47.1875em;
+    width: 500px;
     display: table;
     margin: 5em 5em;
     background: #FFF;
@@ -230,62 +194,101 @@ video::-webkit-media-controls {
     transition: box-shadow ease .5s;
 }
 
-.tstcontent {
-    text-align: center;
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    font-size: 24px;
-    bottom: 10px;
-    text-shadow: 0 0 5px rgba(0,0,0,.2);
-    z-index: 1;
-    width: auto;
-    left: 50px;
-    right: 140px;
+.icon-play-content {
+    display: block;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translate3d(0, -50%, 0);
+    background-color: black;
+    border-radius: 50%;
 }
 
 .icon {
     background: url(../images/player-icons.png) no-repeat;
-    width: 16px;
-    height: 16px;
+}
+
+.icon-button {
+    cursor: pointer;
+    display: inline-block;
+    margin: 5px;
+    position: relative;
+    vertical-align: middle;
 }
 
 .icon-expand {
-  background-position: 0px 0px;
+  background-position: -32px 0px;
+  width: 16px;
+  height: 16px;
 }
 
 .icon-hd-selected {
-  background-position: -16px 0px;
+  background-position: -32px -32px;
+  width: 16px;
+  height: 16px;
 }
 
 .icon-hd {
-  background-position: 0px -16px;
+  background-position: -32px -16px;
+  width: 16px;
+  height: 16px;
 }
 
 .icon-minimize {
-  background-position: -16px -16px;
-}
-
-.icon-play {
-  background-position: -32px 0px;
+  background-position: 0px -32px;
+  width: 16px;
+  height: 16px;
 }
 
 .icon-pause {
-  background-position: -32px -16px;
+  background-position: -16px -32px;
+  width: 16px;
+  height: 16px;
 }
 
-.icon-restart {
-  background-position: 0px -32px;
+.icon-play-big {
+  background-position: 0px 0px;
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  display: block;
+  margin: 0 auto;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translate3d(0, -50%, 0);
+}
+
+.icon-play {
+  background-position: -48px 0px;
+  width: 16px;
+  height: 16px;
+}
+
+.icon-reload {
+  background-position: -48px -16px;
+  width: 16px;
+  height: 16px;
 }
 
 .icon-volume-high {
-  background-position: -16px -32px;
+  background-position: -48px -32px;
+  width: 16px;
+  height: 16px;
 }
 
 .icon-volume-low {
-  background-position: -32px -32px;
+  background-position: 0px -48px;
+  width: 16px;
+  height: 16px;
 }
 
 .icon-volume-muted {
-  background-position: -48px 0px;
+  background-position: -16px -48px;
+  width: 16px;
+  height: 16px;
 }
