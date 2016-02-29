@@ -231,7 +231,7 @@ video::-webkit-media-controls {
 }
 
 .tstcontent {
-        text-align: center;
+    text-align: center;
     width: 30px;
     height: 30px;
     line-height: 30px;
@@ -242,4 +242,50 @@ video::-webkit-media-controls {
     width: auto;
     left: 50px;
     right: 140px;
+}
+
+.icon {
+    background: url(../images/player-icons.png) no-repeat;
+    width: 16px;
+    height: 16px;
+}
+
+.icon-expand {
+  background-position: 0px 0px;
+}
+
+.icon-hd-selected {
+  background-position: -16px 0px;
+}
+
+.icon-hd {
+  background-position: 0px -16px;
+}
+
+.icon-minimize {
+  background-position: -16px -16px;
+}
+
+.icon-play {
+  background-position: -32px 0px;
+}
+
+.icon-pause {
+  background-position: -32px -16px;
+}
+
+.icon-restart {
+  background-position: 0px -32px;
+}
+
+.icon-volume-high {
+  background-position: -16px -32px;
+}
+
+.icon-volume-low {
+  background-position: -32px -32px;
+}
+
+.icon-volume-muted {
+  background-position: -48px 0px;
 }

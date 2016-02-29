@@ -2,9 +2,6 @@
 (function() {
 'use strict';
 
-	var svgns = "http://www.w3.org/2000/svg";
-	var xlinkns = "http://www.w3.org/1999/xlink";
-
 	function playerVideo (selector) {
 		this.init(selector);
 	}
@@ -62,23 +59,10 @@
 
 		this.playIconSpan = document.createElement('span');
 		this.playIconSpan.className = 'icon icon-play';
-		this.playIconSpan.setAttribute("tabindex", "1");
-		this.playIconSVG = document.createElementNS(svgns,'svg');	
-		this.playIconUse = document.createElementNS(svgns, 'use');
-		this.playIconUse.setAttributeNS(xlinkns, "xlink:href", "#play");
 
 		this.reloadIconSpan = document.createElement('span');
-		this.reloadIconSpan.className = 'icon icon-reload';
-		this.reloadIconSVG = document.createElementNS(svgns,'svg');	
-		this.reloadIconUse = document.createElementNS(svgns, 'use');
-		this.reloadIconUse.setAttributeNS(xlinkns, "xlink:href", "#reload");
+		this.reloadIconSpan.className = 'icon icon-restart';
 
-		this.reloadIconSVG.appendChild(this.reloadIconUse);
-		this.reloadIconSpan.appendChild(this.reloadIconSVG);
-
-		this.playIconSVG.appendChild(this.playIconUse);
-		this.playIconSpan.appendChild(this.playIconSVG);
-		
 		this.componentsContentLeft.appendChild(this.playIconSpan);	
 		this.componentsContentLeft.appendChild(this.reloadIconSpan);	
 
@@ -139,13 +123,6 @@
 
 		this.iconVolumeSpan = document.createElement('span');
 		this.iconVolumeSpan.className = 'icon icon-volume-high volume-button';
-		this.iconVolumeSVG = document.createElementNS(svgns,'svg');	
-		this.iconVolumeUse = document.createElementNS(svgns, 'use');
-		this.iconVolumeUse.setAttributeNS(xlinkns, "xlink:href", "#volume-high");
-
-		//Volume svg icon	
-		this.iconVolumeSVG.appendChild(this.iconVolumeUse);
-		this.iconVolumeSpan.appendChild(this.iconVolumeSVG);
 
 		///Volume bar
 		this.volumeBarLevel.appendChild(this.volumeBarBall);
@@ -164,21 +141,9 @@
 
 		this.expandIconSpan = document.createElement('span');
 		this.expandIconSpan.className = 'icon icon-expand';
-		this.expandIconSVG = document.createElementNS(svgns,'svg');	
-		this.expandIconUse = document.createElementNS(svgns, 'use');
-		this.expandIconUse.setAttributeNS(xlinkns, "xlink:href", "#expand");
 
 		this.hdIconSpan = document.createElement('span');
 		this.hdIconSpan.className = 'icon icon-hd';
-		this.hdIconSVG = document.createElementNS(svgns,'svg');	
-		this.hdIconUse = document.createElementNS(svgns, 'use');
-		this.hdIconUse.setAttributeNS(xlinkns, "xlink:href", "#hd");
-
-		this.hdIconSVG.appendChild(this.hdIconUse);
-		this.hdIconSpan.appendChild(this.hdIconSVG);
-
-		this.expandIconSVG.appendChild(this.expandIconUse);
-		this.expandIconSpan.appendChild(this.expandIconSVG);
 		
 		this.componentsContentRight.appendChild(this.hdIconSpan);
 		this.componentsContentRight.appendChild(this.expandIconSpan);
@@ -186,19 +151,16 @@
 		return this;
 	}
 
-
 	playerVideo.prototype.createEvents = function () {		
 		
 		self = this;
 
 		this.playIconSpan.addEventListener('click', function (){
 			if (self.player.paused) {			
-				this.className = 'icon icon-pause'
-				this.children[0].children[0].setAttributeNS(xlinkns, "xlink:href", "#pause");
+				this.className = 'icon icon-pause';
 				self.player.play();
 			} else {
-				this.className = 'icon icon-play'
-				this.children[0].children[0].setAttributeNS(xlinkns, "xlink:href", "#play");
+				this.className = 'icon icon-play';
 				self.player.pause();
 			}
 		});
@@ -243,10 +205,10 @@
 		this.expandIconSpan.addEventListener('click', function () {		
 			if (!document.webkitIsFullScreen) {
 				self.player.webkitRequestFullScreen();
-				this.children[0].children[0].setAttributeNS(xlinkns, "xlink:href", "#retract");
+				this.className = "icon icon-minimize"
 			} else {
 				document.webkitCancelFullScreen();
-				this.children[0].children[0].setAttributeNS(xlinkns, "xlink:href", "#expand");
+				this.className = "icon icon-expand"
 			}
 		});
 
@@ -275,11 +237,11 @@
 
 			if (self.player.muted) {
 				self.player.muted = false;
-				this.children[0].children[0].setAttributeNS(xlinkns, "xlink:href", "#volume-high");
+				this.className = "icon icon-volume-high";
 
 			} else {
 				self.player.muted = true;
-				this.children[0].children[0].setAttributeNS(xlinkns, "xlink:href", "#volume-muted");
+				this.className = "icon icon-volume-muted";
 			}
 			
 		});			
@@ -332,10 +294,7 @@
 
 			self.root.removeEventListener('mousemove', mouseMoveVolume);			
 			self.root.removeEventListener('mouseup', mouseUpVolume);	
-		};
-
-
-		
+		};		
 		return this;
 	};
 
