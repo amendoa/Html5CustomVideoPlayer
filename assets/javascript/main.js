@@ -151,11 +151,46 @@
 		return this;
 	}
 
-	playerVideo.prototype.createEvents = function () {		
-		
+	playerVideo.prototype.createEvents = function () {
 		self = this;
 
-		this.playIconSpan.addEventListener('click', function (){
+		function mouseMoveVolume (element) {
+			changeVolume(element.pageY);		
+		}
+
+		function mouseMoveProgress (e) {
+			self.player.pause();
+			self.playIconSpan.className = 'icon icon-play';
+		
+			var totalPercent = Math.round(((e.pageX - findPosX(self.progressBarFull)) / self.progressBarFull.offsetWidth) * 100 );
+			console.log(totalPercent)
+			if (totalPercent >= 0 && totalPercent <= 100) {
+				self.progressBar.style.width = totalPercent + '%';
+			}			
+		}
+
+	    function mouseUpProgress (element) {
+	    	
+	    	var totalPercent = Math.round(((element.pageX - findPosX(self.progressBarFull)) / self.progressBarFull.offsetWidth) * 100 );
+			
+			self.root.removeEventListener('mousemove', mouseMoveProgress);			
+			self.progressBarFull.removeEventListener('mouseup', mouseUpProgress);		
+
+			console.log(totalPercent)
+			if (totalPercent >= 0 && totalPercent <= 100) {
+				self.progressBar.style.width = totalPercent + '%';
+			}
+			self.player.currentTime =  (totalPercent / 100) * self.player.duration;
+			self.player.play();
+			self.playIconSpan.className = 'icon icon-pause';
+		};
+
+		function mouseUpVolume (element) {
+			self.root.removeEventListener('mousemove', mouseMoveVolume);			
+			self.root.removeEventListener('mouseup', mouseUpVolume);	
+		};
+
+		function playPauseClick (){
 			if (self.player.paused) {			
 				this.className = 'icon icon-pause';
 				self.player.play();
@@ -163,13 +198,51 @@
 				this.className = 'icon icon-play';
 				self.player.pause();
 			}
-		});
+		}
 
-		this.reloadIconSpan.addEventListener('click', function () {
+		function findPosY (element) {
+			var current = element.offsetTop;
+			while(element = element.offsetParent) {
+				current += element.offsetTop;
+			}
+			return current;
+		}
+
+		function findPosX (element) {
+			var current = element.offsetLeft;
+			while(element = element.offsetParent) {
+				current += element.offsetLeft;
+			}
+			return current;
+		}
+
+		function changeVolume (pageY) {
+			var offSetY = pageY - findPosY(self.volumeFullBar);
+			if (offSetY >= 0 && offSetY <= self.volumeFullBar.offsetHeight) {
+				var percentage = Math.round(((self.volumeFullBar.offsetHeight - offSetY) / self.volumeFullBar.offsetHeight) * 100);
+				self.volumeBarLevel.style.height = percentage + '%';
+					
+				var volume = percentage / 100 * 1.0
+				self.player.volume = volume;
+				
+				if (volume <= 0){					
+					self.iconVolumeSpan.className = "icon icon-volume-muted";
+					self.player.muted = true;
+				} else if (percentage <= 50) {
+					self.iconVolumeSpan.className = "icon icon-volume-low";
+					self.player.muted = false;
+				} else {
+					self.iconVolumeSpan.className = "icon icon-volume-high";
+					self.player.muted = false;
+				}
+			}		
+		}
+
+		function reloadClick () {
 			self.player.currentTime = 0;
-		});
+		}
 
-		this.player.addEventListener('timeupdate', function () {
+		function videoUpdateTime () {
 			if (self.player.buffered.length > 0) {
 				var currentTime = self.player.currentTime.toFixed(1),
 				currentMinutes = Math.floor((currentTime / 60) % 60),
@@ -194,15 +267,15 @@
 			}	
 
 			if (self.player.ended) {
-				self.playIconSpan.children[0].children[0].setAttributeNS(xlinkns, "xlink:href", "#play");
+				self.playIconSpan.className = 'icon icon-play';
 			}
-		});
-
-		this.player.addEventListener('waiting', function () {
+		}
+		
+		function playerWaiting () {
 			console.log('buffering')
-		});
+		}
 
-		this.expandIconSpan.addEventListener('click', function () {		
+		function expandMinimizeClick () {		
 			if (!document.webkitIsFullScreen) {
 				self.player.webkitRequestFullScreen();
 				this.className = "icon icon-minimize"
@@ -210,112 +283,53 @@
 				document.webkitCancelFullScreen();
 				this.className = "icon icon-expand"
 			}
-		});
+		}
 
-		this.progressBarFull.addEventListener('mousedown', function(element) {
-			if (this == element.target) {
-				self.progressBar.style.width =  (element.offsetX / this.offsetWidth) * 100+'%';
-			}
-		});
+		function progressBarClick (element) {
+			if (element.target != self.progressBarBall) {
+				var percentage = (element.offsetX / this.offsetWidth) * 100;
+				self.progressBar.style.width = percentage + '%';
+				self.player.currentTime =  (percentage / 100) * self.player.duration;
+			}						
+		}
 
-		this.progressBarFull.addEventListener('click', function(element) {
-			if (element.toElement != self.progressBarBall) {
-				var offsetWidth = this.offsetWidth,
-				offsetX = element.offsetX;
-				var per = (offsetX / offsetWidth).toFixed(3);
-
-				var duration = isNaN(self.player.duration) ? 0 : self.player.duration;
-				self.player.currentTime = (duration * per).toFixed(0);
-
-				self.progressBar.style.width =  (offsetX / offsetWidth) * 100 + '%';
-
-				var newMargLeft = element.pageX - this.offsetLeft;
-			}		
-		});
-		
-		this.iconVolumeSpan.addEventListener('click', function (element) {
-
+		function muteUnmuteClick () {
+			console.log(self.player.muted)
 			if (self.player.muted) {
 				self.player.muted = false;
-				this.className = "icon icon-volume-high";
-
+				self.iconVolumeSpan.className = "icon icon-volume-high";
 			} else {
 				self.player.muted = true;
-				this.className = "icon icon-volume-muted";
-			}
-			
-		});			
-		
-		this.volumeFullBar.addEventListener('mousedown', function(element) {
+				self.iconVolumeSpan.className = "icon icon-volume-muted";
+			}			
+		}
+
+		function volumeBarClick (element) {
 			if (element.toElement != self.volumeBarBall) {				
 				changeVolume(element.pageY);
 			}			
 
 			self.root.addEventListener('mousemove', mouseMoveVolume);
 			self.root.addEventListener('mouseup', mouseUpVolume);
-		});
+		}
 
-		this.progressBar.addEventListener('mousedown', function (e) {
+		function progressBarBallClick() {
 			self.root.addEventListener('mousemove', mouseMoveProgress);
-			self.root.addEventListener('mouseup', mouseUpProgress);
-		}); 
-
-		function mouseMoveVolume (element) {
-			changeVolume(element.pageY);		
+			self.progressBarFull.addEventListener('mouseup', mouseUpProgress);
 		}
 
-		function mouseMoveProgress (e) {
-			self.player.pause();
-			console.log(e)
-			console.log(e.pageX)
-			var positionX = e.pageX - ((self.progressBarFull.offsetLeft * 2) - self.progressBarFull.offsetHeight);
-			var totalPercent = (positionX / self.progressBarFull.offsetWidth ) * 100;
-			if (totalPercent >= 0 && totalPercent <= 100) {
-				self.progressBar.style.width = Math.round(totalPercent) + '%';
-			}			
-		}
+		this.playIconSpan.addEventListener('click', playPauseClick);
+		this.reloadIconSpan.addEventListener('click', reloadClick);
+		this.player.addEventListener('timeupdate', videoUpdateTime);
+		this.player.addEventListener('waiting', playerWaiting);
+		this.expandIconSpan.addEventListener('click', expandMinimizeClick);
+		this.progressBarFull.addEventListener('mousedown', progressBarClick);
+		this.iconVolumeSpan.addEventListener('click', muteUnmuteClick);	
+		this.volumeFullBar.addEventListener('mousedown', volumeBarClick);
+		this.progressBarBall.addEventListener('mousedown', progressBarBallClick); 	
 
-	    function mouseUpProgress (element) {
-	    	console.log(element)
-	    	console.log('mouseUpProgress')
-			self.root.removeEventListener('mousemove', mouseMoveProgress);			
-			self.root.removeEventListener('mouseup', mouseUpProgress);		
-
-			var positionX = element.pageX - ((self.progressBarFull.offsetLeft * 2) - self.progressBarFull.offsetHeight);
-			var totalPercent = (positionX / self.progressBarFull.offsetWidth ) * 100;
-			if (totalPercent >= 0 && totalPercent <= 100) {
-				self.progressBar.style.width = Math.round(totalPercent) + '%';
-			}
-			self.player.currentTime =  (Math.round(totalPercent) / 100) * self.player.duration;
-			self.player.play();			
-		};
-
-		function mouseUpVolume (element) {
-
-			self.root.removeEventListener('mousemove', mouseMoveVolume);			
-			self.root.removeEventListener('mouseup', mouseUpVolume);	
-		};		
 		return this;
 	};
-
-	function findPosY (element) {
-		var current = element.offsetTop;
-		while(element = element.offsetParent) {
-			current += element.offsetTop;
-		}
-		return current;
-	}
-
-	function changeVolume (pageY) {
-		var offSetY = pageY - findPosY(self.volumeFullBar);
-		if (offSetY >= 0 && offSetY <= self.volumeFullBar.offsetHeight) {
-			var percentage = Math.round(((self.volumeFullBar.offsetHeight - offSetY) / self.volumeFullBar.offsetHeight) * 100);
-			self.volumeBarLevel.style.height = percentage + '%';
-				
-			var volume = percentage / 100 * 1.0
-			self.player.volume = volume;
-		}		
-	}
 
 	new playerVideo('.video-player');
 
