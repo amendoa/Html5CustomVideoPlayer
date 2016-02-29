@@ -3,7 +3,9 @@
 var gulp = require('gulp'),
 	uglify = require('gulp-uglify'),
 	cssmin = require('gulp-cssmin'),
-	rename = require('gulp-rename');
+	rename = require('gulp-rename'),
+	spritesmith = require('gulp.spritesmith');
+
 
 gulp.task('compressJS' , function () {
 	return gulp.src('assets/javascript/*.js')
@@ -19,4 +21,12 @@ gulp.task('compressCSS', function () {
 		.pipe(gulp.dest('dist/assets/stylesheet'));
 });
 
-gulp.task('default', ['compressJS', 'compressCSS']);
+gulp.task('sprite', function () {
+  var spriteData = gulp.src('./assets/images/icons/*.png').pipe(spritesmith({
+    imgName: 'player-icons.png',
+    cssName: 'sprite.css'
+  }));
+  return spriteData.pipe(gulp.dest('./assets/images'));
+});
+
+gulp.task('build', ['compressJS', 'compressCSS']);
