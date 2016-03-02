@@ -98,7 +98,10 @@
 		this.timer = document.createElement('span');
 		this.timer.className = 'timer';
 		this.timer.innerHTML = '0:00 / 0:00';
-		
+		//this.timer.setAttribute("unselectable","on");
+		this.timer.onselectstart = function() { return(false); };
+        this.timer.setAttribute('unselectable', 'on', 0);
+	
 		this.componentsContentRight.appendChild(this.timer);
 
 		return this;
