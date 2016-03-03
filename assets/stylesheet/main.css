@@ -210,10 +210,10 @@ video::-webkit-media-controls {
 
 .icon {
     background: url(../images/player-icons.png) no-repeat;
+    cursor: pointer;
 }
 
-.icon-button {
-    cursor: pointer;
+.icon-button {    
     display: inline-block;
     margin: 5px;
     position: relative;
@@ -221,57 +221,75 @@ video::-webkit-media-controls {
 }
 
 .icon-expand {
-  background-position: -36px 0px;
+  background-position: -64px 0px;
   width: 20px;
   height: 20px;
 }
+
 .icon-hd-selected {
-  background-position: -56px -20px;
+  background-position: -20px -64px;
   width: 20px;
   height: 20px;
 }
+
 .icon-hd {
-  background-position: 0px -36px;
+  background-position: -64px -20px;
   width: 20px;
   height: 20px;
 }
+
 .icon-minimize {
-  background-position: -20px -36px;
+  background-position: -64px -40px;
   width: 20px;
   height: 20px;
 }
+
 .icon-pause {
-  background-position: -56px 0px;
+  background-position: 0px -64px;
   width: 20px;
   height: 20px;
 }
+
 .icon-play-big {
   background-position: 0px 0px;
-  width: 36px;
-  height: 36px;
+  width: 64px;
+  height: 64px;
+  position: absolute;
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
+  display: block;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
 }
+
 .icon-play {
-  background-position: 0px -56px;
+  background-position: -40px -64px;
   width: 20px;
   height: 20px;
 }
+
 .icon-reload {
-  background-position: -20px -56px;
+  background-position: -60px -64px;
   width: 20px;
   height: 20px;
 }
+
 .icon-volume-high {
-  background-position: -40px -56px;
+  background-position: -84px 0px;
   width: 20px;
   height: 20px;
 }
+
 .icon-volume-low {
-  background-position: -76px 0px;
+  background-position: -84px -20px;
   width: 20px;
   height: 20px;
 }
+
 .icon-volume-muted {
-  background-position: -76px -20px;
+  background-position: -84px -40px;
   width: 20px;
   height: 20px;
 }
+
