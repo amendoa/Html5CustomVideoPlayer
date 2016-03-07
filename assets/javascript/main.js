@@ -59,9 +59,11 @@ playerVideo.prototype.buildControlsButtons = function () {
 
 	this.playIconSpan = document.createElement('span');
 	this.playIconSpan.className = 'icon icon-button icon-play';
+	this.playIconSpan.setAttribute("name", "icon-play");
 
 	this.reloadIconSpan = document.createElement('span');
-	this.reloadIconSpan.className = 'icon icon-button icon-restart';
+	this.reloadIconSpan.className = 'icon icon-button icon-reload';
+	this.reloadIconSpan.setAttribute("name", "icon-reload");
 
 	this.componentsContentLeft.appendChild(this.playIconSpan);	
 	this.componentsContentLeft.appendChild(this.reloadIconSpan);	
@@ -73,15 +75,19 @@ playerVideo.prototype.buildProgressBar = function () {
 
 	this.progressBarFull = document.createElement('div');
 	this.progressBarFull.className = 'progressbar-full';
+	this.progressBarFull.setAttribute("name", "progressbar-full");
 
 	this.bufferedBar = document.createElement('div');
 	this.bufferedBar.className = 'bufferedbar';
+	this.bufferedBar.setAttribute("name", "bufferedbar");
 
 	this.progressBar = document.createElement('div');
 	this.progressBar.className = 'progressbar';
+	this.progressBar.setAttribute("name", "progressbar");
 
 	this.progressBarBall = document.createElement('div');
 	this.progressBarBall.className = 'progressbar-ball';
+	this.progressBarBall.setAttribute("name", "progressbar-ball");
 
 
 	this.progressBar.appendChild(this.progressBarBall);
@@ -95,17 +101,15 @@ playerVideo.prototype.buildProgressBar = function () {
 
 playerVideo.prototype.buildTime = function () {
 		
-	this.timer = document.createElement('span');
+	this.timer = document.createElement('div');
 	this.timer.className = 'timer';
 	this.timer.innerHTML = '0:00 / 0:00';
-	//this.timer.setAttribute("unselectable","on");
-	this.timer.onselectstart = function() { return(false); };
-	this.timer.setAttribute('unselectable', 'on', 0);
+	this.timer.setAttribute("name", "timer");
 	
 	this.componentsContentRight.appendChild(this.timer);
 
-		return this;
-	};
+	return this;
+};
 
 playerVideo.prototype.buildVolumeButton = function () {
 
@@ -114,18 +118,23 @@ playerVideo.prototype.buildVolumeButton = function () {
 
 	this.volumeContent = document.createElement('div');
 	this.volumeContent.className = 'volumebar-content';
+	this.volumeContent.setAttribute("name", "volumebar-content");
 
 	this.volumeFullBar = document.createElement('div');
 	this.volumeFullBar.className = 'volumebar-full';
+	this.volumeFullBar.setAttribute("name", "volumebar-full");
 
 	this.volumeBarLevel = document.createElement('div');
 	this.volumeBarLevel.className = 'volumebar-level';
+	this.volumeBarLevel.setAttribute("name", "volumebar-level");
 
 	this.volumeBarBall = document.createElement('div');
 	this.volumeBarBall.className = 'volumebar-ball';
+	this.volumeBarBall.setAttribute("name", "volumebar-ball");
 
 	this.iconVolumeSpan = document.createElement('span');
 	this.iconVolumeSpan.className = 'icon icon-button icon-volume-high volume-button';
+	this.iconVolumeSpan.setAttribute("name", "icon-volume");
 
 		///Volume bar
 	this.volumeBarLevel.appendChild(this.volumeBarBall);
@@ -144,9 +153,11 @@ playerVideo.prototype.buildFunctionButtons = function () {
 
 	this.expandIconSpan = document.createElement('span');
 	this.expandIconSpan.className = 'icon icon-button icon-expand';
+	this.expandIconSpan.setAttribute("name", "icon-expand");
 
 	this.hdIconSpan = document.createElement('span');
 	this.hdIconSpan.className = 'icon icon-button icon-hd';
+	this.hdIconSpan.setAttribute("name", "icon-hd");
 		
 	this.componentsContentRight.appendChild(this.hdIconSpan);
 	this.componentsContentRight.appendChild(this.expandIconSpan);
@@ -199,38 +210,60 @@ function fullScreenChange (element) {
 }
 
 function mouseMoveVolume (element) {
-	changeVolume(element.pageY);		
+	var root = findRoot(element.target);
+	var volumeBarBall = getElementsByName(root,'volumebar-ball');
+	changeVolume(element);				
 }
 
-function mouseMoveProgress (e) {
-	self.player.pause();
-	self.playIconSpan.className = 'icon icon-button icon-play';
-		
-	var totalPercent = Math.round(((e.pageX - findPosX(self.progressBarFull)) / self.progressBarFull.offsetWidth) * 100 );
 
+
+function mouseMoveProgress (element) {
+	var root = findRoot(element.target);	
+	var player = findPlayer(root);
+	var progressBarFull = getElementsByName(root,'progressbar-full');
+	var progressBar = getElementsByName(root,'progressbar');
+
+	player.pause();
+	getElementsByName(root,'icon-play').className = 'icon icon-button icon-pause';
+
+	var position;
+
+	var totalPercent = Math.round(((element.pageX - findPosX(progressBarFull)) / progressBarFull.offsetWidth) * 100 );
+	//console.log(element)
+	//console.log(element)
+	//console.log(element.offsetX)
+	//console.log(element.layerX)
+	console.log(element.x)
 	if (totalPercent >= 0 && totalPercent <= 100) {
-		self.progressBar.style.width = totalPercent + '%';
+		progressBar.style.width = totalPercent + '%';
 	}			
 }
 
 function mouseUpProgress (element) {
-	    	
-  	var totalPercent = Math.round(((element.pageX - findPosX(self.progressBarFull)) / self.progressBarFull.offsetWidth) * 100 );
+	
+	var root = findRoot(element.target);	
+	var player = findPlayer(root);
+	var progressBarFull = getElementsByName(root,'progressbar-full');
+	var progressBar = getElementsByName(root,'progressbar');
+	var iconPlay = getElementsByName(root,'icon-play');
+
+  	var totalPercent = Math.round(((element.pageX - findPosX(progressBarFull)) / progressBarFull.offsetWidth) * 100 );
 			
-	self.root.removeEventListener('mousemove', mouseMoveProgress);			
-	self.progressBarFull.removeEventListener('mouseup', mouseUpProgress);		
+	root.removeEventListener('mousemove', mouseMoveProgress);			
+	root.removeEventListener('mouseup', mouseUpProgress);		
 
 	if (totalPercent >= 0 && totalPercent <= 100) {
-		self.progressBar.style.width = totalPercent + '%';
+		progressBar.style.width = totalPercent + '%';
 	}
-	self.player.currentTime =  (totalPercent / 100) * self.player.duration;
-	self.player.play();
-	self.playIconSpan.className = 'icon icon-button icon-pause';
+	player.currentTime =  (totalPercent / 100) * player.duration;
+	player.play();
+	iconPlay.className = 'icon icon-button icon-pause';
 }
 
 function mouseUpVolume (element) {
-	self.root.removeEventListener('mousemove', mouseMoveVolume);			
-	self.root.removeEventListener('mouseup', mouseUpVolume);	
+	var root = findRoot(element.target);
+	root.removeEventListener('mousemove', mouseMoveVolume);			
+	root.removeEventListener('mouseup', mouseUpVolume);	
 }
 
 function playPauseClick (element) {
@@ -238,46 +271,63 @@ function playPauseClick (element) {
 	var player = findPlayer(root);	
 
 	if (player.paused) {
-		root.getElementsByClassName('icon icon-button icon-play')[0].className = 'icon icon-button icon-pause';	
+		getElementsByName(root,'icon-play').className = 'icon icon-button icon-pause';	
 		player.play();
 	} else {
-		root.getElementsByClassName('icon icon-button icon-pause')[0].className = 'icon icon-button icon-play';
+		getElementsByName(root,'icon-play').className = 'icon icon-button icon-play';
 		player.pause();
 	}
 }
 
-function changeVolume (pageY) {
-	var offSetY = pageY - findPosY(self.volumeFullBar);
-	if (offSetY >= 0 && offSetY <= self.volumeFullBar.offsetHeight) {
-		var percentage = Math.round(((self.volumeFullBar.offsetHeight - offSetY) / self.volumeFullBar.offsetHeight) * 100);
-		self.volumeBarLevel.style.height = percentage + '%';
-					
+function changeVolume (element) {
+	console.log(element)
+	var root = findRoot(element.target);
+	var volumeFullBar = getElementsByName(root,'volumebar-full');
+	var volumeBarLevel = getElementsByName(root,'volumebar-level');
+	var iconVolumeSpan = getElementsByName(root,'icon-volume');
+	var player = findPlayer(root);
+
+	var offSetY = element.pageY - findPosY(volumeFullBar);
+	if (offSetY >= 0 && offSetY <= volumeFullBar.offsetHeight) {
+		var percentage = Math.round(((volumeFullBar.offsetHeight - offSetY) / volumeFullBar.offsetHeight) * 100);
+		volumeBarLevel.style.height = percentage + '%';
+		
 		var volume = percentage / 100 * 1.0;
-		self.player.volume = volume;
-				
+		player.volume = volume;
+		
 		if (volume <= 0){					
-			self.iconVolumeSpan.className = "icon icon-button icon-volume-muted";
-			self.player.muted = true;
+			iconVolumeSpan.className = "icon icon-button icon-volume-muted";
+			player.muted = true;
 		} else if (percentage <= 50) {
-			self.iconVolumeSpan.className = "icon icon-button icon-volume-low";
-			self.player.muted = false;
+			iconVolumeSpan.className = "icon icon-button icon-volume-low";
+			player.muted = false;
 		} else {
-			self.iconVolumeSpan.className = "icon icon-button icon-volume-high";
-			self.player.muted = false;
+			iconVolumeSpan.className = "icon icon-button icon-volume-high";
+			player.muted = false;
 		}
 	}		
 }
 
-function reloadClick () {
-	self.player.currentTime = 0;
+function reloadClick (element) {
+	var root = findRoot(element instanceof HTMLElement ? element: this);
+	var player = findPlayer(root);
+	player.currentTime = 0;
 }
 
-function videoUpdateTime () {
-	if (self.player.buffered.length > 0) {
-		var currentTime = self.player.currentTime.toFixed(1),
+function videoUpdateTime (element) {
+	var root = findRoot(element instanceof HTMLElement ? element: this);
+	var player = findPlayer(root);
+	var timer = getElementsByName(root,'timer');
+	var bufferedBar = getElementsByName(root,'bufferedbar');
+	var progressBar = getElementsByName(root,'progressbar');
+	var playIcon = getElementsByName(root,'icon-play');
+
+	if (player.buffered.length > 0) {
+		var currentTime = player.currentTime.toFixed(1),
 		currentMinutes = Math.floor((currentTime / 60) % 60),
 		currentSeconds = Math.floor(currentTime % 60);
-		var durationTime = self.player.duration.toFixed(1),
+		
+		var durationTime = player.duration.toFixed(1),
 		durationMinutes = Math.floor((durationTime / 60) % 60),
 		durationSeconds = Math.floor(durationTime % 60);
 
@@ -289,14 +339,14 @@ function videoUpdateTime () {
 		durationSeconds = '0' + durationSeconds;
 	}
 
-	self.timer.innerHTML = currentMinutes + ':' + currentSeconds + ' / ' + durationMinutes + ':' + durationSeconds;
+	timer.innerHTML = currentMinutes + ':' + currentSeconds + ' / ' + durationMinutes + ':' + durationSeconds;
 
-	self.bufferedBar.style.width =  Math.round((self.player.buffered.end(self.player.buffered.length - 1) / durationTime) * 100) + '%';
-		self.progressBar.style.width = Math.round((currentTime / durationTime) * 100) + '%';		
+	bufferedBar.style.width =  Math.round((player.buffered.end(player.buffered.length - 1) / durationTime) * 100) + '%';
+		progressBar.style.width = Math.round((currentTime / durationTime) * 100) + '%';		
 	}	
 
-	if (self.player.ended) {
-		self.playIconSpan.className = 'icon icon-button icon-play';
+	if (player.ended) {
+		playIcon.className = 'icon icon-button icon-play';
 	}
 }
 		
@@ -316,7 +366,9 @@ function expandMinimizeClick (element) {
 		}		
 	} else if(root.webkitRequestFullScreen) {
 		if (!document.webkitIsFullScreen) {
+			root.style.left = "0px";
 			root.webkitRequestFullScreen();
+
 		} else {
 			document.webkitCancelFullScreen();
 		}		
@@ -336,43 +388,52 @@ function expandMinimizeClick (element) {
 }
 
 function progressBarClick (element) {
-	if (element.target != self.progressBarBall) {
+	var root = findRoot(element instanceof HTMLElement ? element: this);		
+	var progressBarBall = getElementsByName(root,'progressbar-ball');		
+	var progressBar = getElementsByName(root,'progressbar');		
+	var player = findPlayer(root);
+	
+	if (element.target != progressBarBall) {
 		var percentage = (element.offsetX / this.offsetWidth) * 100;
-		self.progressBar.style.width = percentage + '%';
-		self.player.currentTime =  (percentage / 100) * self.player.duration;
+		progressBar.style.width = percentage + '%';
+		player.currentTime =  (percentage / 100) * player.duration;
 	}						
 }
 
 function muteUnmuteClick (element) {
-
 	var root = findRoot(element instanceof HTMLElement ? element: this);		
 	var player = findPlayer(root);
+	var iconVolume = getElementsByName(root,'icon-volume');
 	
 	if (player.muted) {
 		player.muted = false;
-		root.getElementsByClassName('icon icon-button icon-volume-muted')[0].className = 'icon icon-button icon-volume-high';
+		iconVolume.className = 'icon icon-button icon-volume-high';
 	} else {
 		player.muted = true;
-		root.getElementsByClassName('icon icon-button icon-volume-high')[0].className = 'icon icon-button icon-volume-muted';
+		iconVolume.className = 'icon icon-button icon-volume-muted';
 	}			
 }
 
 function volumeBarClick (element) {
-	if (element.toElement != self.volumeBarBall) {				
-		changeVolume(element.pageY);
+	var root = findRoot(element instanceof HTMLElement ? element: this);
+	var volumeBarBall = getElementsByName(root,'volumebar-ball');
+		
+	if (element.toElement != volumeBarBall) {
+		changeVolume(element);
 	}			
 
-	self.root.addEventListener('mousemove', mouseMoveVolume);
-	self.root.addEventListener('mouseup', mouseUpVolume);
+	root.addEventListener('mousemove', mouseMoveVolume);
+	root.addEventListener('mouseup', mouseUpVolume);
 }
 
-function progressBarBallClick() {
-	self.root.addEventListener('mousemove', mouseMoveProgress);
-	self.progressBarFull.addEventListener('mouseup', mouseUpProgress);
+function progressBarBallClick(element) {
+	var root = findRoot(element.target);
+	root.addEventListener('mousemove', mouseMoveProgress);
+	root.addEventListener('mouseup', mouseUpProgress);
 }
 
 function findRoot (element) {
-	if (element.className == "player-content") {		
+	if (element.getAttribute('name') == "player-content") {		
 		return element;		
 	} else {
 		return findRoot(element.offsetParent);
@@ -384,28 +445,40 @@ function findPlayer (element) {
 }
 
 function findPosY (element) {
-	var current = element.offsetTop;
-	while(element = element.offsetParent) {
-		current += element.offsetTop;
-	}
-	return current;
+	var top = 0;
+	do {
+        top += element.offsetTop  || 0;
+        element = element.offsetParent;
+    } while(element);
+    return top;
 }
 
 function findPosX (element) {
-	var current = element.offsetLeft;
-	while(element = element.offsetParent) {
-		current += element.offsetLeft;
-	}
-	return current;
+	var left = 0;
+	do {
+        left += element.offsetLeft || 0;
+        element = element.offsetParent;
+    } while(element);
+    return left;
 }
 
 function changeFullScreenIcon (event, root) {
-	console.log(event)
+	var iconExpand = getElementsByName(root,'icon-expand');
 	if (event) {
-		root.getElementsByClassName('icon icon-button icon-expand')[0].className = 'icon icon-button icon-minimize';
+		iconExpand.className = 'icon icon-button icon-minimize';
 	} else {
-		root.getElementsByClassName('icon icon-button icon-minimize')[0].className = 'icon icon-button icon-expand';
+		iconExpand.className = 'icon icon-button icon-expand';
 	}
+}
+
+function getElementsByName (element, name) {
+	var childs = element.getElementsByTagName("*");
+	for (var i = 0; i < childs.length; i++) {
+		if (childs[i].getAttribute('name') == name) {
+			return childs[i];
+		}
+	}
+	return undefined;
 }
 
 window.loadPlayer = function (element) {
