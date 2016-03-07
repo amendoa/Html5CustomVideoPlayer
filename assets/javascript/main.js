@@ -226,14 +226,8 @@ function mouseMoveProgress (element) {
 	player.pause();
 	getElementsByName(root,'icon-play').className = 'icon icon-button icon-pause';
 
-	var position;
-
 	var totalPercent = Math.round(((element.pageX - findPosX(progressBarFull)) / progressBarFull.offsetWidth) * 100 );
-	//console.log(element)
-	//console.log(element)
-	//console.log(element.offsetX)
-	//console.log(element.layerX)
-	console.log(element.x)
+
 	if (totalPercent >= 0 && totalPercent <= 100) {
 		progressBar.style.width = totalPercent + '%';
 	}			
@@ -280,7 +274,6 @@ function playPauseClick (element) {
 }
 
 function changeVolume (element) {
-	console.log(element)
 	var root = findRoot(element.target);
 	var volumeFullBar = getElementsByName(root,'volumebar-full');
 	var volumeBarLevel = getElementsByName(root,'volumebar-level');
