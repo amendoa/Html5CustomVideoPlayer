@@ -28,6 +28,7 @@ playerVideo.prototype.build = function (element) {
 		.buildTime()
 		.buildVolumeButton()
 		.buildFunctionButtons()
+		.buildSpinner()
 		.createEvents()
 		.startVideo();
 };
@@ -136,7 +137,7 @@ playerVideo.prototype.buildVolumeButton = function () {
 	this.iconVolumeSpan.className = 'icon icon-button icon-volume-high volume-button';
 	this.iconVolumeSpan.setAttribute("name", "icon-volume");
 
-		///Volume bar
+	//Volume bar
 	this.volumeBarLevel.appendChild(this.volumeBarBall);
 	this.volumeFullBar.appendChild(this.volumeBarLevel);
 	this.volumeContent.appendChild(this.volumeFullBar);		
@@ -173,6 +174,7 @@ playerVideo.prototype.createEvents = function () {
 	this.reloadIconSpan.addEventListener('click', reloadClick);
 	this.player.addEventListener('timeupdate', videoUpdateTime);
 	this.player.addEventListener('waiting', playerWaiting);
+	this.player.addEventListener('playing', playerPlaying);
 	this.expandIconSpan.addEventListener('click', expandMinimizeClick);
 	this.progressBarFull.addEventListener('mousedown', progressBarClick);
 	this.iconVolumeSpan.addEventListener('click', muteUnmuteClick);	
@@ -189,8 +191,24 @@ playerVideo.prototype.createEvents = function () {
 
 playerVideo.prototype.startVideo = function () {
 	playPauseClick(this.root);	
+	return this;
 };
-			
+
+playerVideo.prototype.buildSpinner = function () {
+	
+	this.spinnerContent = document.createElement('div');
+	this.spinnerContent.className = 'spinner-content';
+	this.spinnerContent.setAttribute('name', 'spinner-content');
+	
+	this.spinner = document.createElement('div');
+	this.spinner.className = 'spinner';
+
+	this.spinnerContent.appendChild(this.spinner);
+	this.root.appendChild(this.spinnerContent);
+
+	return this;
+};	
+
 function fullScreenChange (element) {
 	var root = findRoot(element instanceof HTMLElement ? element: this);
 	switch(element.type) {
@@ -316,25 +334,43 @@ function videoUpdateTime (element) {
 	var playIcon = getElementsByName(root,'icon-play');
 
 	if (player.buffered.length > 0) {
-		var currentTime = player.currentTime.toFixed(1),
-		currentMinutes = Math.floor((currentTime / 60) % 60),
-		currentSeconds = Math.floor(currentTime % 60);
 		
 		var durationTime = player.duration.toFixed(1),
-		durationMinutes = Math.floor((durationTime / 60) % 60),
-		durationSeconds = Math.floor(durationTime % 60);
+		durationMinutes = Math.floor((durationTime / 60 ) % 60),
+		durationSeconds = Math.floor(durationTime % 60),
+		durationHours = Math.floor((durationTime / 3600 ) % 24);
 
-	if (currentSeconds < 10) {
-		currentSeconds = '0' + currentSeconds;
-	}
+		var currentTime = player.currentTime.toFixed(1),
+		currentMinutes = Math.floor((currentTime / 60) % 60),
+		currentSeconds = Math.floor(currentTime % 60),
+		currentHours = Math.floor((currentTime / 3600 ) % 24);		
 
-	if (durationSeconds < 10) {
-		durationSeconds = '0' + durationSeconds;
-	}
+		if (currentSeconds < 10) {
+			currentSeconds = '0' + currentSeconds;
+		}
 
-	timer.innerHTML = currentMinutes + ':' + currentSeconds + ' / ' + durationMinutes + ':' + durationSeconds;
+		if (durationSeconds < 10) {
+			durationSeconds = '0' + durationSeconds;
+		}
 
-	bufferedBar.style.width =  Math.round((player.buffered.end(player.buffered.length - 1) / durationTime) * 100) + '%';
+		if (currentMinutes < 10) {
+			currentMinutes = '0' + currentMinutes;
+		}
+
+		if (durationMinutes < 10) {
+			durationMinutes = '0' + durationMinutes;
+		}
+
+		timer.innerHTML = durationHours > 0 ? currentHours + ':' : '';
+		timer.innerHTML += durationMinutes > 0 ? currentMinutes + ':' : '';
+		timer.innerHTML += currentSeconds;
+		timer.innerHTML += ' / ';
+
+		timer.innerHTML += durationHours > 0 ? durationHours + ':' : '';
+		timer.innerHTML += durationMinutes > 0 ? durationMinutes + ':' : '';
+		timer.innerHTML += durationSeconds > 0 ? durationSeconds : '';
+
+		bufferedBar.style.width =  Math.round((player.buffered.end(player.buffered.length - 1) / durationTime) * 100) + '%';
 		progressBar.style.width = Math.round((currentTime / durationTime) * 100) + '%';		
 	}	
 
@@ -343,8 +379,16 @@ function videoUpdateTime (element) {
 	}
 }
 		
-function playerWaiting () {
-	console.log('buffering');
+function playerWaiting (element) {
+	var root = findRoot(element instanceof HTMLElement ? element: this);
+	var spinnerContent = getElementsByName(root,'spinner-content');
+	spinnerContent.style.visibility='visible';
+}
+
+function playerPlaying (element) {
+	var root = findRoot(element instanceof HTMLElement ? element: this);
+	var spinnerContent = getElementsByName(root,'spinner-content');
+	spinnerContent.style.visibility='hidden';
 }
 
 function expandMinimizeClick (element) {	

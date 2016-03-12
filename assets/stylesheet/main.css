@@ -168,6 +168,7 @@ video::-webkit-media-controls {
 
 .player-content {
   width: 100%;
+  height: 100%;
   position: relative;
   font-size: 0;
   background-color: #000000;
@@ -179,7 +180,7 @@ video::-webkit-media-controls {
   user-select: none;
 }
 
-.player-content:hover > div {
+.player-content:hover > .controls-content {
     visibility: visible;
     opacity: 1;
     transition: visibility 0.3s, opacity 0.3s linear;
@@ -311,4 +312,44 @@ video::-webkit-media-controls {
   position: fixed;
   top:0;
   bottom: 0;
+}
+
+.rotate {
+  -moz-transform:rotate(45deg);  
+  -webkit-transform:rotate(45deg);  
+  -o-transform:rotate(45deg);  
+  -ms-transform:rotate(45deg);
+} 
+
+.spinner-content {
+  width: 100px;
+  height: 100px; 
+}
+
+.spinner-content .spinner {
+  position: absolute;
+  border: 4px solid;
+  border-color: transparent #FFF #FFF #FFF;
+  border-radius: 50%;
+  margin: 30% 0 0 30%;
+  width: 36%;
+  height: 36%;
+  animation: single-arc-rotate 1s infinite linear; 
+  box-shadow: 0 1px 4px rgba(20, 22, 26, 0.21);
+}
+
+@keyframes single-arc-rotate {
+  100% {
+    transform: rotate(360deg); 
+  } 
+}
+
+.spinner-content {
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto; 
 }
